@@ -9,4 +9,19 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="orig_description">Background image</string>
+    <string name="top_menu_back_arrow_description">Back button</string>
+    <string name="rating_star_description">Rating star</string>
+    <string name="actor_name1">Robert Downey Jr.</string>
+    <string name="actor_name2">Chris Evans</string>
+    <string name="actor_name3">Mark Ruffalo</string>
+    <string name="actor_name4">Chris Hemsworth</string>
+    <string name="back_caption">Back</string>
+    <string name="genre">Action, Adventure, Fantasy</string>
+    <string name="reviews_num">125 reviews</string>
+    <string name="storyline_header">Storyline</string>
+    <string name="storyline_text">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
+    <string name="cast_header">Cast</string>
+    <string name="movie_name">Avengers:\nEnd Game</string>
+    <string name="content_rating">13+</string>
 </resources>
