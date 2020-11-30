@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
-
-<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".MovieDetailsActivity">
+    tools:context=".MovieDetailsActivity"
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/iv_background"
@@ -143,7 +139,8 @@
         app:layout_constraintRight_toRightOf="@id/tv_movie_content_rating"
         app:layout_constraintTop_toTopOf="@id/tv_movie_content_rating"
         app:layout_constraintBottom_toBottomOf="@id/tv_movie_content_rating"
-        android:background="@drawable/shape_rounded_rect"/>
+        android:background="@drawable/shape_rounded_rect"
+        android:backgroundTint="@color/background"/>
 
     <TextView
         android:id="@+id/tv_movie_content_rating"
@@ -350,4 +347,3 @@
         app:layout_constraintGuide_end="16dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
