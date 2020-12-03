@@ -28,4 +28,8 @@
         <item name="layout_constraintDimensionRatio">1:1</item>
         <item name="layout_constraintHorizontal_weight">1</item>
     </style>
+
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/small_rating_bar</item>
+    </style>
 </resources>
