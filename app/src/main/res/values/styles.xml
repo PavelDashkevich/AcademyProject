@@ -26,7 +26,6 @@
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_marginTop">@dimen/actor_photo_margin_top</item>
         <item name="layout_constraintDimensionRatio">1:1</item>
-        <item name="layout_constraintHorizontal_weight">1</item>
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">

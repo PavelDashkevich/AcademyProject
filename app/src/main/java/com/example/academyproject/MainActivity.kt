@@ -2,10 +2,11 @@ package com.example.academyproject
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
-class MainActivity : AppCompatActivity(), FragmentMoviesList.ClickListener {
+class MainActivity : AppCompatActivity(), MovieClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,10 +20,10 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.ClickListener {
         }
     }
 
-    override fun onCardViewClick() {
+    override fun onMovieClick(movie: Movie) {
         supportFragmentManager.beginTransaction().apply {
             addToBackStack(null)
-            add(R.id.fl_main, FragmentMoviesDetails.newInstance())
+            add(R.id.fl_main, FragmentMoviesDetails.newInstance(DataUtil.movies.indexOf(movie)))
             commit()
         }
     }
