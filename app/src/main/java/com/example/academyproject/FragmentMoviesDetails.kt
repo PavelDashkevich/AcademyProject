@@ -1,32 +1,31 @@
 package com.example.academyproject
 
+import android.annotation.SuppressLint
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.example.academyproject.data.Movie
 
 class FragmentMoviesDetails: Fragment() {
-    private fun applyCornersToActorPhoto(rad: Float, img: ShapeableImageView?) {
-        img?.shapeAppearanceModel
-            ?.toBuilder()
-            ?.setTopRightCorner(CornerFamily.ROUNDED, rad)
-            ?.setTopLeftCorner(CornerFamily.ROUNDED, rad)
-            ?.setBottomRightCorner(CornerFamily.ROUNDED, rad)
-            ?.setBottomLeftCorner(CornerFamily.ROUNDED, rad)
-            ?.build()
-    }
+    private lateinit var adapter: ActorsAdapter
 
-    private fun applyCornersToActorsPhotos(view: View) {
-        val rad: Float = resources.getDimension(R.dimen.actor_photo_corner_radius)
-
-        applyCornersToActorPhoto(rad, view.findViewById(R.id.siv_movie_actor_photo1))
-        applyCornersToActorPhoto(rad, view.findViewById(R.id.siv_movie_actor_photo2))
-        applyCornersToActorPhoto(rad, view.findViewById(R.id.siv_movie_actor_photo3))
-        applyCornersToActorPhoto(rad, view.findViewById(R.id.siv_movie_actor_photo4))
-    }
+    private var movie: Movie? = null
+    private var movieID: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,15 +34,93 @@ class FragmentMoviesDetails: Fragment() {
     ): View? {
         val view: View? = inflater.inflate(R.layout.fragment_movies_details, container, false)
 
-        view?.apply { applyCornersToActorsPhotos(this) }
+        savedInstanceState?.apply {
+            movieID = this.getInt(ARG_MOVIE_ID)
+            movie = DataUtil.getMovieByID(movieID)
+        }
+
+        view?.apply {
+            applyMovieData(this)
+        }
 
         return view
     }
 
-    companion object {
-        fun newInstance(): FragmentMoviesDetails {
-            return FragmentMoviesDetails()
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(ARG_MOVIE_ID, movieID)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val recycler: RecyclerView = view.findViewById(R.id.rv_actors_list)
+        recycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        adapter = ActorsAdapter(movie?.actors ?: listOf())
+        recycler.adapter = adapter
+    }
+
+    private fun applyMovieData(view: View) {
+        val name: TextView = view.findViewById(R.id.tv_movie_name)
+        val genre: TextView = view.findViewById(R.id.tv_movie_genre)
+        val contentRating: TextView = view.findViewById(R.id.tv_movie_content_rating)
+        val storyline: TextView = view.findViewById(R.id.tv_storyline_text)
+        val reviewsNumber: TextView = view.findViewById(R.id.tv_reviews_number)
+        val back: TextView = view.findViewById(R.id.tv_top_menu_back)
+        val castHeader: TextView = view.findViewById(R.id.tv_cast_header)
+
+        val rating: RatingBar = view.findViewById(R.id.rb_rating_stars)
+
+        val image: ImageView = view.findViewById(R.id.iv_background)
+
+        name.text = movie?.title ?: ""
+        genre.text = movie?.let { movie -> movie.genres.joinToString { it.name } }
+        contentRating.text = getString(R.string.content_rating, movie?.minimumAge ?: 13)
+        storyline.text = movie?.overview ?: ""
+        reviewsNumber.text = getString (R.string.reviews_num, movie?.numberOfRatings ?: 0)
+        castHeader.visibility = if ((movie?.actors?.size ?: 0) == 0) View.GONE else View.VISIBLE
+
+        back.setOnClickListener {
+            if (parentFragmentManager.backStackEntryCount > 0)
+                parentFragmentManager.popBackStack()
+        }
+
+        rating.rating = (movie?.ratings ?: 0F) / 2F
+
+        movie?.let { loadBackdropImage(it, image) }
+    }
+
+    private fun loadBackdropImage(movie: Movie, image: ImageView) {
+        val colorMatrix = ColorMatrix()
+
+        context?.let {
+            val colorDrawable = ColorDrawable(ResourcesCompat.getColor(it.resources, R.color.background, null))
+
+            val requestOptions = RequestOptions()
+                .placeholder(colorDrawable)
+                .error(colorDrawable)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+
+            Glide
+                .with(it)
+                .load(movie.backdrop)
+                .apply(requestOptions)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(image)
+        }
+
+        colorMatrix.setSaturation(0F)
+        image.colorFilter = ColorMatrixColorFilter(colorMatrix)
+    }
+
+    companion object {
+        fun newInstance(idOfSelectedMovie: Int): FragmentMoviesDetails {
+            val fragment = FragmentMoviesDetails()
+            fragment.movieID = idOfSelectedMovie
+            fragment.movie = DataUtil.getMovieByID(idOfSelectedMovie)
+
+            return fragment
+        }
+
+        const val ARG_MOVIE_ID = "MOVIE_ID"
+    }
 }

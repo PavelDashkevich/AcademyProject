@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/cl_actor"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="8dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/siv_movie_actor_photo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/actor_photo_margin_top"
+        android:contentDescription="@string/actor_name"
+        android:scaleType="center"
+        tools:src="@tools:sample/avatars"
+        />
+
+    <TextView
+        android:id="@+id/tv_movie_actor_name"
+        app:layout_constraintTop_toBottomOf="@id/siv_movie_actor_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@string/actor_name"
+        style="@style/TextViewMovieActorName"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
