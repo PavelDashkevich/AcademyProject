@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,11 +15,10 @@
         <ImageView
             android:id="@+id/iv_background"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/movie_details_description"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pic_movie_image_in_details"
-            app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_orig"
+            tools:src="@tools:sample/backgrounds/scenic"
+            android:adjustViewBounds="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -27,10 +27,10 @@
             android:id="@+id/v_background_gradient"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_orig"
+            app:layout_constraintLeft_toLeftOf="@id/iv_background"
+            app:layout_constraintRight_toRightOf="@id/iv_background"
+            app:layout_constraintTop_toTopOf="@id/iv_background"
+            app:layout_constraintBottom_toBottomOf="@id/iv_background"
             android:background="@drawable/shape_background_gradient"/>
 
         <ImageView
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_header"
-            app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_orig"
+            app:layout_constraintBottom_toBottomOf="@id/iv_background"
             app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
             app:layout_constraintRight_toRightOf="@id/guideline_vertical_right" />
 
@@ -218,15 +218,6 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="rv_actors_list"
             />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_orig"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.36"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_vertical_left"

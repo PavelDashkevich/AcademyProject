@@ -1,14 +1,13 @@
 package com.example.academyproject
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.academyproject.data.Actor
 
 class ActorsAdapter(
-        context: Context,
-        var actors: List<Actor>
+    var actors: List<Actor>
 ): RecyclerView.Adapter<ActorViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
         val view: View = LayoutInflater.from(parent.context)

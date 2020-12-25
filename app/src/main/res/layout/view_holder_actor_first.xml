@@ -15,8 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/actor_photo_margin_top"
-        app:layout_constraintDimensionRatio="1:1"
         android:contentDescription="@string/actor_name"
+        android:scaleType="center"
         tools:src="@tools:sample/avatars"
         />
 

@@ -1,20 +1,19 @@
 package com.example.academyproject
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
+import com.example.academyproject.data.Movie
 
 class MoviesAdapter(
-        context: Context,
-        var movies: List<Movie>,
-        val itemClickListener: MovieClickListener
+    var movies: MutableList<Movie>,
+    private val itemClickListener: MovieClickListener
 ): RecyclerView.Adapter<MovieViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.view_holder_movie, parent, false)
+        val view: View = LayoutInflater
+                            .from(parent.context)
+                            .inflate(R.layout.view_holder_movie, parent, false)
 
         return MovieViewHolder(view)
     }

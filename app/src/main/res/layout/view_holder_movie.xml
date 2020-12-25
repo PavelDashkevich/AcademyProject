@@ -25,7 +25,7 @@
             android:id="@+id/iv_movie_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/pic_movie_image_in_list"
+            tools:src="@tools:sample/backgrounds/scenic"
             android:layout_gravity="top"
             android:scaleType="fitStart"
             android:adjustViewBounds="true"
@@ -153,7 +153,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:fontFamily="@font/roboto_black"
-            android:paddingStart="8dp"
+            android:paddingHorizontal="8dp"
             android:paddingVertical="3dp"
             android:layout_marginTop="8dp"
             tools:ignore="RtlSymmetry" />

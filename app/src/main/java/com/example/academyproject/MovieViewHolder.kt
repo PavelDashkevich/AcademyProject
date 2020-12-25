@@ -1,12 +1,19 @@
 package com.example.academyproject
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestOptions
+import com.example.academyproject.data.Movie
 
 class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val name: TextView = itemView.findViewById(R.id.tv_movie_name)
@@ -21,26 +28,21 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val like: ImageView = itemView.findViewById(R.id.iv_movie_like)
 
     fun bind(movie: Movie, clickListener: MovieClickListener) {
-        var context = itemView.context
+        val context = itemView.context
 
-        name.text = movie.name
-        genre.text = movie.genre
-        contentRating.text = movie.contentRating
-        duration.text = "${movie.duration} min"
-        reviewsNumber.text = movie.reviewsNumber.toString() + " REVIEWS"
+        name.text = movie.title
+        genre.text = movie.genres.joinToString { it.name }
+        contentRating.text = context.getString(R.string.content_rating, movie.minimumAge)
+        duration.text = context.getString(R.string.movie_duration,movie.runtime)
+        reviewsNumber.text = context.getString(R.string.reviews_num, movie.numberOfRatings)
 
-        rating.rating = movie.rating
+        rating.rating = movie.ratings / 2F
 
-        image.setImageResource(
-                context.resources.getIdentifier(
-                        movie.imageInList,
-                        "drawable",
-                        context.packageName
-                )
-        )
+        loadPosterImage(movie, context)
+
         like.setImageResource(
                 context.resources.getIdentifier(
-                        if (movie.like) "ic_like_on" else "ic_like_off",
+                        /*if (movie.like) "ic_like_on" else*/ "ic_like_off",
                         "drawable",
                         context.packageName
                 )
@@ -48,6 +50,35 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         itemView.setOnClickListener {
             clickListener.onMovieClick(movie)
+        }
+    }
+
+    private fun loadPosterImage(movie: Movie, context: Context) {
+        printDebug("MovieViewHolder(): glide loading: ${movie.id}: ${movie.poster}: start")
+
+        val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
+
+        val requestOptions = RequestOptions()
+            .placeholder(colorDrawable)
+            .error(colorDrawable)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+
+        Glide
+            .with(context)
+            .load(movie.poster)
+            .apply(requestOptions)
+            .transition(withCrossFade())
+            .into(image)
+
+        printDebug("MovieViewHolder(): glide loading: ${movie.id}: ${movie.poster}: end")
+    }
+
+    companion object {
+        private const val DEBUG_TAG = "DEBUG_APP"
+        private const val DEBUG_ON = false
+
+        fun printDebug(msg: String) {
+            if (DEBUG_ON) Log.d(DEBUG_TAG, msg)
         }
     }
 }

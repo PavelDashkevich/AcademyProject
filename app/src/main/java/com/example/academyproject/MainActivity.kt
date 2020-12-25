@@ -2,9 +2,7 @@ package com.example.academyproject
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
+import com.example.academyproject.data.Movie
 
 class MainActivity : AppCompatActivity(), MovieClickListener {
 
@@ -23,7 +21,7 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
     override fun onMovieClick(movie: Movie) {
         supportFragmentManager.beginTransaction().apply {
             addToBackStack(null)
-            add(R.id.fl_main, FragmentMoviesDetails.newInstance(DataUtil.movies.indexOf(movie)))
+            add(R.id.fl_main, FragmentMoviesDetails.newInstance(movie.id))
             commit()
         }
     }
