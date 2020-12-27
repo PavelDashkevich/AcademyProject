@@ -3,22 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_view"
+    android:id="@+id/sv_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    tools:ignore="ContentDescription,Overdraw">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_background"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/movie_details_description"
+            android:layout_height="298dp"
             tools:src="@tools:sample/backgrounds/scenic"
-            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -37,9 +38,8 @@
             android:id="@+id/iv_top_menu_back_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/top_menu_back_arrow_description"
             android:src="@drawable/ic_menu_back"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
             app:layout_constraintTop_toTopOf="@id/tv_top_menu_back"
             app:layout_constraintBottom_toBottomOf="@id/tv_top_menu_back"/>
 
@@ -53,8 +53,8 @@
             android:textColor="@color/gray_700"
             android:textSize="@dimen/text_size_small"
             android:fontFamily="@font/roboto_light"
-            app:layout_constraintStart_toStartOf="@id/guideline_vertical_left"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@id/gl_vertical_left"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/tv_movie_name_helper"
@@ -62,21 +62,21 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_header"
             app:layout_constraintBottom_toBottomOf="@id/iv_background"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right" />
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right" />
 
         <TextView
             android:id="@+id/tv_movie_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/movie_name"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_header"
             android:textStyle="bold"
             android:fontFamily="@font/roboto_black"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right"
-            app:layout_constraintTop_toTopOf="@id/tv_movie_name_helper"/>
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
+            app:layout_constraintTop_toTopOf="@id/tv_movie_name_helper"
+            tools:text="@tools:sample/lorem"/>
 
         <View
             android:id="@+id/v_content_rating_bg"
@@ -101,27 +101,27 @@
             android:fontFamily="@font/roboto_black"
             android:paddingVertical="2dp"
             app:layout_constraintBottom_toTopOf="@id/tv_movie_name"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left" />
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left" />
 
         <TextView
             android:id="@+id/tv_movie_genre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="4dp"
-            android:text="@string/genre"
             android:textColor="@color/maroon"
             android:textSize="@dimen/text_size_general"
             android:fontFamily="@font/roboto_light"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_name" />
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_name"
+            tools:text="@tools:sample/lorem"/>
 
         <TextView
             android:id="@+id/tv_reviews_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/reviews_number_margin"
-            android:text="@string/reviews_num"
+            android:text="@plurals/reviews_num"
             android:textColor="@color/gray_700"
             android:textSize="@dimen/text_size_general"
             android:textStyle="bold"
@@ -134,8 +134,8 @@
             android:id="@+id/tv_storyline_header"
             android:layout_marginTop="24dp"
             android:text="@string/storyline_header"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right"
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
             app:layout_constraintTop_toBottomOf="@id/tv_reviews_number"
             style="@style/TextViewGeneralHeader"/>
 
@@ -145,22 +145,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:paddingVertical="8dp"
-            android:text="@string/storyline_text"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_general"
             android:textIsSelectable="true"
             android:fontFamily="@font/roboto_light"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right"
-            app:layout_constraintTop_toBottomOf="@id/tv_storyline_header" />
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
+            app:layout_constraintTop_toBottomOf="@id/tv_storyline_header"
+            tools:text="@tools:sample/lorem/random"/>
 
         <TextView
             android:id="@+id/tv_cast_header"
             android:layout_marginTop="24dp"
             android:paddingVertical="2dp"
             android:text="@string/cast_header"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_vertical_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_vertical_right"
+            app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
+            app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
             app:layout_constraintTop_toBottomOf="@id/tv_storyline_text"
             style="@style/TextViewGeneralHeader"/>
 
@@ -177,7 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/v_movie_genre_helper"
-            app:layout_constraintLeft_toRightOf="@id/guideline_vertical_left"
+            app:layout_constraintLeft_toRightOf="@id/gl_vertical_left"
             android:isIndicator="true"
             android:numStars="5"
             android:rating="4"
@@ -191,8 +191,8 @@
             android:id="@+id/rv_actors_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/guideline_vertical_left"
-            app:layout_constraintEnd_toEndOf="@id/guideline_vertical_right"
+            app:layout_constraintStart_toStartOf="@id/gl_vertical_left"
+            app:layout_constraintEnd_toEndOf="@id/gl_vertical_right"
             app:layout_constraintTop_toBottomOf="@id/tv_cast_header"/>
 
         <View
@@ -201,7 +201,7 @@
             android:layout_height="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier_end_of_screen" />
+            app:layout_constraintTop_toBottomOf="@id/barrier_end_of_content" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier_reviews"
@@ -212,15 +212,14 @@
             app:constraint_referenced_ids="v_movie_genre_helper" />
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier_end_of_screen"
+            android:id="@+id/barrier_end_of_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="rv_actors_list"
-            />
+            app:constraint_referenced_ids="rv_actors_list" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_vertical_left"
+            android:id="@+id/gl_vertical_left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -228,7 +227,7 @@
             app:layout_constraintLeft_toLeftOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_vertical_right"
+            android:id="@+id/gl_vertical_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"

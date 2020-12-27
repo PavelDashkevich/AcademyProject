@@ -19,6 +19,7 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun bind(actor: Actor) {
         name.text = actor.name
+        image.contentDescription = actor.name
         loadActorsPhoto(actor)
     }
 

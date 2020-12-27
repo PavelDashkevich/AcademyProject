@@ -2,7 +2,6 @@ package com.example.academyproject
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.RatingBar
@@ -34,7 +33,7 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         genre.text = movie.genres.joinToString { it.name }
         contentRating.text = context.getString(R.string.content_rating, movie.minimumAge)
         duration.text = context.getString(R.string.movie_duration,movie.runtime)
-        reviewsNumber.text = context.getString(R.string.reviews_num, movie.numberOfRatings)
+        reviewsNumber.text = context.resources.getQuantityString(R.plurals.reviews_num, movie.numberOfRatings, movie.numberOfRatings)
 
         rating.rating = movie.ratings / 2F
 
@@ -54,8 +53,6 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     private fun loadPosterImage(movie: Movie, context: Context) {
-        printDebug("MovieViewHolder(): glide loading: ${movie.id}: ${movie.poster}: start")
-
         val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
 
         val requestOptions = RequestOptions()
@@ -70,15 +67,6 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .transition(withCrossFade())
             .into(image)
 
-        printDebug("MovieViewHolder(): glide loading: ${movie.id}: ${movie.poster}: end")
-    }
-
-    companion object {
-        private const val DEBUG_TAG = "DEBUG_APP"
-        private const val DEBUG_ON = false
-
-        fun printDebug(msg: String) {
-            if (DEBUG_ON) Log.d(DEBUG_TAG, msg)
-        }
+        image.contentDescription = movie.title
     }
 }

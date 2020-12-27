@@ -3,7 +3,6 @@
     <dimen name="actor_photo_margin_side">8dp</dimen>
     <dimen name="actor_photo_corner_radius">6dp</dimen>
     <dimen name="reviews_number_margin">9dp</dimen>
-    <dimen name="rating_star_margin">3dp</dimen>
     <dimen name="text_size_very_small">8sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_general">14sp</dimen>

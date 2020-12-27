@@ -1,6 +1,5 @@
 package com.example.academyproject
 
-import android.annotation.SuppressLint
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.ColorDrawable
@@ -55,6 +54,7 @@ class FragmentMoviesDetails: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recycler: RecyclerView = view.findViewById(R.id.rv_actors_list)
         recycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recycler.addItemDecoration(ActorItemDecoration(resources.getDimension(R.dimen.actor_photo_margin_side).toInt()))
         adapter = ActorsAdapter(movie?.actors ?: listOf())
         recycler.adapter = adapter
     }
@@ -72,11 +72,14 @@ class FragmentMoviesDetails: Fragment() {
 
         val image: ImageView = view.findViewById(R.id.iv_background)
 
+        val numOfRatings = movie?.numberOfRatings ?: 0
+
         name.text = movie?.title ?: ""
         genre.text = movie?.let { movie -> movie.genres.joinToString { it.name } }
         contentRating.text = getString(R.string.content_rating, movie?.minimumAge ?: 13)
         storyline.text = movie?.overview ?: ""
-        reviewsNumber.text = getString (R.string.reviews_num, movie?.numberOfRatings ?: 0)
+        reviewsNumber.text = view.context.resources.getQuantityString(R.plurals.reviews_num, numOfRatings, numOfRatings)
+
         castHeader.visibility = if ((movie?.actors?.size ?: 0) == 0) View.GONE else View.VISIBLE
 
         back.setOnClickListener {
@@ -110,6 +113,8 @@ class FragmentMoviesDetails: Fragment() {
 
         colorMatrix.setSaturation(0F)
         image.colorFilter = ColorMatrixColorFilter(colorMatrix)
+
+        image.contentDescription = movie.title
     }
 
     companion object {

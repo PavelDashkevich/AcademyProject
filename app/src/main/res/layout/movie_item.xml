@@ -15,7 +15,8 @@
     android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/background"
     app:strokeWidth="2dp"
-    app:strokeColor="@color/gray_850">
+    app:strokeColor="@color/gray_850"
+    tools:ignore="ContentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,7 +30,6 @@
             android:layout_gravity="top"
             android:scaleType="fitStart"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/movie_image_description"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -110,7 +110,7 @@
             android:numStars="5"
             android:rating="3.5"
             android:progressTint="@color/maroon"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             style="@style/CustomRatingBar"/>
 
         <TextView
@@ -118,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/reviews_number_margin"
-            android:text="@string/reviews_num"
+            android:text="@plurals/reviews_num"
             android:textColor="@color/gray_700"
             android:textSize="@dimen/text_size_very_small"
             android:fontFamily="@font/roboto_black"
@@ -131,7 +131,6 @@
             android:id="@+id/tv_movie_genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/genre"
             android:textSize="@dimen/text_size_very_small"
             android:textColor="@color/maroon"
             android:fontFamily="@font/roboto_light"
@@ -139,7 +138,8 @@
             app:layout_constraintBottom_toTopOf="@id/tv_reviews_number"
             android:paddingStart="8dp"
             android:paddingVertical="2dp"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            tools:text="@tools:sample/lorem"/>
 
         <TextView
             android:id="@+id/tv_movie_name"
@@ -148,7 +148,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_movie_image"
-            android:text="@string/movie_name"
             android:textSize="@dimen/text_size_general"
             android:textStyle="bold"
             android:textColor="@color/white"
@@ -156,7 +155,8 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="3dp"
             android:layout_marginTop="8dp"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            tools:text="@tools:sample/lorem"/>
 
         <TextView
             android:id="@+id/tv_movie_duration"

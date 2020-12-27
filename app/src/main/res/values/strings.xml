@@ -1,20 +1,21 @@
 <resources>
     <string name="app_name">AcademyProject</string>
-    <string name="movie_details_description">Background image</string>
-    <string name="top_menu_back_arrow_description">Back button</string>
-    <string name="rating_star_description">Rating star</string>
-    <string name="actor_name">Robert Downey Jr.</string>
+
+    <!--    Headers    -->
     <string name="back_caption">Back</string>
-    <string name="genre">Action, Adventure, Fantasy</string>
-    <string name="reviews_num">%1$d reviews</string>
     <string name="storyline_header">Storyline</string>
-    <string name="storyline_text">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
     <string name="cast_header">Cast</string>
-    <string name="movie_name">Avengers:\nEnd Game</string>
-    <string name="content_rating">%1$d+</string>
     <string name="movies_list_menu_header">Movies list</string>
+
+    <!--    Image descriptions    -->
     <string name="location_icon_description">Location icon</string>
-    <string name="movie_image_description">Movie image</string>
     <string name="like_movie_description">Like this movie</string>
+
+    <!--    Parameterized strings   -->
+    <plurals name="reviews_num">
+        <item quantity="one">%d review</item>
+        <item quantity="other">%d reviews</item>
+    </plurals>
+    <string name="content_rating">%1$d+</string>
     <string name="movie_duration">%1$d min</string>
 </resources>
