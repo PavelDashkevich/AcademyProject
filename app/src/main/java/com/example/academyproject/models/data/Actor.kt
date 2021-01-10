@@ -1,4 +1,4 @@
-package com.example.academyproject.data
+package com.example.academyproject.models.data
 
 data class Actor(
     val id: Int,

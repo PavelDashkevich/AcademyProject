@@ -1,4 +1,4 @@
-package com.example.academyproject
+package com.example.academyproject.views
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View
@@ -9,7 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.example.academyproject.data.Actor
+import com.example.academyproject.R
+import com.example.academyproject.models.data.Actor
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
@@ -25,7 +26,8 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     private fun loadActorsPhoto(actor: Actor) {
         val context = itemView.context
-        val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
+        val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources,
+            R.color.background, null))
         val requestOptions = RequestOptions()
             .placeholder(colorDrawable)
             .error(colorDrawable)

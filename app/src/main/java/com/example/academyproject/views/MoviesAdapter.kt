@@ -1,10 +1,11 @@
-package com.example.academyproject
+package com.example.academyproject.views
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.academyproject.data.Movie
+import com.example.academyproject.R
+import com.example.academyproject.models.data.Movie
 
 class MoviesAdapter(
     var movies: MutableList<Movie>,

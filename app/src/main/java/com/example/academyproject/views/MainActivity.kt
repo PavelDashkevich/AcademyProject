@@ -1,8 +1,9 @@
-package com.example.academyproject
+package com.example.academyproject.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.academyproject.data.Movie
+import com.example.academyproject.R
+import com.example.academyproject.models.data.Movie
 
 class MainActivity : AppCompatActivity(), MovieClickListener {
 
@@ -21,8 +22,12 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
     override fun onMovieClick(movie: Movie) {
         supportFragmentManager.beginTransaction().apply {
             addToBackStack(null)
-            add(R.id.fl_main, FragmentMoviesDetails.newInstance(movie.id))
+            add(R.id.fl_main, FragmentMovieDetails.newInstance(movie.id))
             commit()
         }
     }
+}
+
+interface MovieClickListener {
+    fun onMovieClick(movie: Movie)
 }
