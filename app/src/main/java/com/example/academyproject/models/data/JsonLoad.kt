@@ -1,4 +1,4 @@
-package com.example.academyproject.data
+package com.example.academyproject.models.data
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +71,8 @@ internal fun parseActors(data: String): List<Actor> {
 internal suspend fun loadMovies(context: Context): List<Movie> = withContext(Dispatchers.IO) {
     val genresMap = loadGenres(context)
     val actorsMap = loadActors(context)
+
+    //delay(3000)
 
     val data = readAssetFileToString(context, "data.json")
     parseMovies(data, genresMap, actorsMap)

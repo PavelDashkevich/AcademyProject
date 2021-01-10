@@ -1,4 +1,4 @@
-package com.example.academyproject
+package com.example.academyproject.views
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -12,7 +12,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.example.academyproject.data.Movie
+import com.example.academyproject.R
+import com.example.academyproject.models.data.Movie
 
 class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val name: TextView = itemView.findViewById(R.id.tv_movie_name)
@@ -53,7 +54,8 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     private fun loadPosterImage(movie: Movie, context: Context) {
-        val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
+        val colorDrawable = ColorDrawable(ResourcesCompat.getColor(context.resources,
+            R.color.background, null))
 
         val requestOptions = RequestOptions()
             .placeholder(colorDrawable)

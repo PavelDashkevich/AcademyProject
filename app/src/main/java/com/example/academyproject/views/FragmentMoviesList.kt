@@ -1,4 +1,4 @@
-package com.example.academyproject
+package com.example.academyproject.views
 
 import android.content.Context
 import android.content.res.Configuration
@@ -8,48 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.academyproject.data.loadMovies
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.academyproject.R
+import com.example.academyproject.viewmodels.MoviesViewModel
+import com.example.academyproject.models.data.Movie
 
 class FragmentMoviesList: Fragment() {
+    private val viewModel: MoviesViewModel by activityViewModels()
     private lateinit var adapter: MoviesAdapter
     private lateinit var movieClickListener: MovieClickListener
     private lateinit var recycler: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var currentOrientation = Configuration.ORIENTATION_UNDEFINED
-    private var coroutineScopeDefault = CoroutineScope(Dispatchers.Default)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (context is MovieClickListener)
             movieClickListener = context
-    }
-
-    private suspend fun loadData() = withContext(Dispatchers.Main) {
-        if (!DataUtil.isDataLoaded) {
-            progressBar.visibility = View.VISIBLE
-
-            context?.let {
-                DataUtil.moviesList = loadMovies(it)
-                DataUtil.isDataLoaded = true
-            }
-
-            progressBar.visibility = View.GONE
-        }
-    }
-
-    private suspend fun updateAdapter() = withContext(Dispatchers.Main) {
-        val movies = DataUtil.moviesList ?: listOf()
-
-        adapter.movies.clear()
-        adapter.movies.addAll(movies)
-        adapter.notifyDataSetChanged()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +43,21 @@ class FragmentMoviesList: Fragment() {
     ): View? = inflater.inflate(R.layout.fragment_movies_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recycler = view.findViewById(R.id.rv_movies_list)
+        setupViewElements(view)
+        setListOfMovies()
+
+        viewModel.isMoviesLoading.observe(viewLifecycleOwner, this::updateLoadingProgress)
+        viewModel.moviesList.observe(viewLifecycleOwner, this::updateListOfMovies)
+
+        context?.let { viewModel.loadMovies(it) }
+    }
+
+    private fun setupViewElements(view: View) {
         progressBar = view.findViewById(R.id.pb_content_loading)
+        recycler = view.findViewById(R.id.rv_movies_list)
+    }
+
+    private fun setListOfMovies() {
         recycler.layoutManager = GridLayoutManager(
             requireContext(),
             if (currentOrientation == Configuration.ORIENTATION_PORTRAIT)
@@ -75,13 +66,18 @@ class FragmentMoviesList: Fragment() {
                 COLUMNS_NUM_LANDSCAPE
         )
 
-        adapter = MoviesAdapter(mutableListOf(), movieClickListener)
+        adapter = MoviesAdapter(viewModel.moviesList.value as MutableList<Movie>, movieClickListener)
         recycler.adapter = adapter
+    }
 
-        coroutineScopeDefault.launch {
-            loadData()
-            updateAdapter()
-        }
+    private fun updateLoadingProgress(isLoading: Boolean) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun updateListOfMovies(newMoviesList: List<Movie>) {
+        adapter.movies.clear()
+        adapter.movies.addAll(newMoviesList)
+        adapter.notifyDataSetChanged()
     }
 
     companion object {
