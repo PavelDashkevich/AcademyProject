@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.academyproject.R
-import com.example.academyproject.models.data.Actor
+import com.example.academyproject.models.Actor
 
 class ActorsAdapter(
     private var actors: List<Actor>

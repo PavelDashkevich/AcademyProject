@@ -7,13 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.academyproject.R
 import com.example.academyproject.viewmodels.MoviesViewModel
-import com.example.academyproject.models.data.Movie
+import com.example.academyproject.models.Movie
 
 class FragmentMoviesList: Fragment() {
     private val viewModel: MoviesViewModel by activityViewModels()
@@ -48,8 +49,10 @@ class FragmentMoviesList: Fragment() {
 
         viewModel.isMoviesLoading.observe(viewLifecycleOwner, this::updateLoadingProgress)
         viewModel.moviesList.observe(viewLifecycleOwner, this::updateListOfMovies)
+        viewModel.latestUpdatedItemIndex.observe(viewLifecycleOwner, this::updateMovieItem)
+        viewModel.errorOnMoviesLoading.observe(viewLifecycleOwner, this::showError)
 
-        context?.let { viewModel.loadMovies(it) }
+        viewModel.loadMovies()
     }
 
     private fun setupViewElements(view: View) {
@@ -66,7 +69,11 @@ class FragmentMoviesList: Fragment() {
                 COLUMNS_NUM_LANDSCAPE
         )
 
-        adapter = MoviesAdapter(viewModel.moviesList.value as MutableList<Movie>, movieClickListener)
+        adapter = MoviesAdapter(
+            viewModel.moviesList.value as MutableList<Movie>,
+            movieClickListener,
+            viewModel
+        )
         recycler.adapter = adapter
     }
 
@@ -78,6 +85,15 @@ class FragmentMoviesList: Fragment() {
         adapter.movies.clear()
         adapter.movies.addAll(newMoviesList)
         adapter.notifyDataSetChanged()
+    }
+
+    private fun updateMovieItem(indexOfMovie: Int?) {
+        indexOfMovie?.let { adapter.notifyItemChanged(it) }
+    }
+
+    private fun showError(errorMsg: String) {
+        if (errorMsg != "")
+            Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
     }
 
     companion object {

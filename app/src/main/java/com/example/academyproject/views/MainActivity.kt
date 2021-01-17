@@ -3,7 +3,7 @@ package com.example.academyproject.views
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.academyproject.R
-import com.example.academyproject.models.data.Movie
+import com.example.academyproject.models.Movie
 
 class MainActivity : AppCompatActivity(), MovieClickListener {
 
