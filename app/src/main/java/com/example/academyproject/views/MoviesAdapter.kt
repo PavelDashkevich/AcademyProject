@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.academyproject.R
-import com.example.academyproject.models.data.Movie
+import com.example.academyproject.models.Movie
+import com.example.academyproject.viewmodels.MoviesViewModel
 
 class MoviesAdapter(
     var movies: MutableList<Movie>,
-    private val itemClickListener: MovieClickListener
+    private val itemClickListener: MovieClickListener,
+    private val viewModel: MoviesViewModel
 ): RecyclerView.Adapter<MovieViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view: View = LayoutInflater
@@ -20,6 +22,9 @@ class MoviesAdapter(
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        if (!movies[position].runtimeLoaded)
+            viewModel.loadMovieDetails(movies[position].id)
+
         holder.bind(movies[position], itemClickListener)
     }
 

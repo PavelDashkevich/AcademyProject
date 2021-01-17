@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.example.academyproject.R
-import com.example.academyproject.models.data.Movie
+import com.example.academyproject.models.Movie
 
 class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val name: TextView = itemView.findViewById(R.id.tv_movie_name)
@@ -33,7 +33,11 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         name.text = movie.title
         genre.text = movie.genres.joinToString { it.name }
         contentRating.text = context.getString(R.string.content_rating, movie.minimumAge)
-        duration.text = context.getString(R.string.movie_duration,movie.runtime)
+        duration.text =
+            if (movie.runtime == null)
+                ""
+            else
+                context.getString(R.string.movie_duration, movie.runtime ?: 0)
         reviewsNumber.text = context.resources.getQuantityString(R.plurals.reviews_num, movie.numberOfRatings, movie.numberOfRatings)
 
         rating.rating = movie.ratings / 2F
@@ -65,6 +69,7 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         Glide
             .with(context)
             .load(movie.poster)
+            .onlyRetrieveFromCache(false)
             .apply(requestOptions)
             .transition(withCrossFade())
             .into(image)

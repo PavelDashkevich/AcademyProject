@@ -154,6 +154,17 @@
             app:layout_constraintTop_toBottomOf="@id/tv_storyline_header"
             tools:text="@tools:sample/lorem/random"/>
 
+        <ProgressBar
+            android:id="@+id/pb_content_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_storyline_text"
+            android:visibility="gone"
+            android:indeterminate="true"/>
+
         <TextView
             android:id="@+id/tv_cast_header"
             android:layout_marginTop="24dp"

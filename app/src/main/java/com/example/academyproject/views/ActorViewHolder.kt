@@ -10,7 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.academyproject.R
-import com.example.academyproject.models.data.Actor
+import com.example.academyproject.models.Actor
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
@@ -35,7 +35,13 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         Glide
             .with(context)
-            .load(actor.picture)
+            .load(
+                if (actor.picture == null) {
+                    itemView.resources.getIdentifier("pic_actor_no_photo", "drawable", context.packageName)
+                } else {
+                    actor.picture
+                }
+            )
             .apply(requestOptions)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(image)
