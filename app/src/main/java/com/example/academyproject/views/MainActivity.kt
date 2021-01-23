@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
     override fun onMovieClick(movie: Movie) {
         supportFragmentManager.beginTransaction().apply {
             addToBackStack(null)
-            add(R.id.fl_main, FragmentMovieDetails.newInstance(movie.id))
+            add(R.id.fl_main, FragmentMovieDetails.newInstance(movie))
             commit()
         }
     }

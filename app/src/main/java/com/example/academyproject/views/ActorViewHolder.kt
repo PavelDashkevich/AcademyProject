@@ -36,10 +36,14 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         Glide
             .with(context)
             .load(
-                if (actor.picture == null) {
-                    itemView.resources.getIdentifier("pic_actor_no_photo", "drawable", context.packageName)
+                if (actor.imagePath == "") {
+                    itemView.resources.getIdentifier(
+                            "pic_no_actor_photo",
+                            "drawable",
+                            context.packageName
+                    )
                 } else {
-                    actor.picture
+                    actor.imagePath
                 }
             )
             .apply(requestOptions)

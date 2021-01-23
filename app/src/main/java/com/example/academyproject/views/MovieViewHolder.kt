@@ -32,7 +32,7 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         name.text = movie.title
         genre.text = movie.genres.joinToString { it.name }
-        contentRating.text = context.getString(R.string.content_rating, movie.minimumAge)
+        contentRating.text = movie.contentRating
         duration.text =
             if (movie.runtime == null)
                 ""
@@ -63,12 +63,28 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         val requestOptions = RequestOptions()
             .placeholder(colorDrawable)
-            .error(colorDrawable)
+            .error(
+                itemView.resources.getIdentifier(
+                    "pic_no_poster",
+                    "drawable",
+                    context.packageName
+                )
+            )
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
 
         Glide
             .with(context)
-            .load(movie.poster)
+            .load(
+                if (movie.posterImagePath == "") {
+                    itemView.resources.getIdentifier(
+                        "pic_no_poster",
+                        "drawable",
+                        context.packageName
+                    )
+                } else {
+                    movie.posterImagePath
+                }
+            )
             .onlyRetrieveFromCache(false)
             .apply(requestOptions)
             .transition(withCrossFade())
