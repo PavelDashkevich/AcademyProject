@@ -9,15 +9,18 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.academyproject.R
 import com.example.academyproject.viewmodels.MoviesViewModel
 import com.example.academyproject.models.Movie
+import com.example.academyproject.viewmodels.MoviesViewModelFactory
 
 class FragmentMoviesList: Fragment() {
-    private val viewModel: MoviesViewModel by activityViewModels()
+    private val viewModel: MoviesViewModel by viewModels {
+        MoviesViewModelFactory(requireContext().applicationContext)
+    }
     private lateinit var adapter: MoviesAdapter
     private lateinit var movieClickListener: MovieClickListener
     private lateinit var recycler: RecyclerView
@@ -93,7 +96,7 @@ class FragmentMoviesList: Fragment() {
 
     private fun showError(errorMsg: String) {
         if (errorMsg != "")
-            Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
+            Toast.makeText(this.activity, errorMsg, Toast.LENGTH_LONG).show()
     }
 
     companion object {

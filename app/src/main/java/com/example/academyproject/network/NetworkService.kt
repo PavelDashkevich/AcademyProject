@@ -28,3 +28,4 @@ private val retrofit: Retrofit = Retrofit.Builder()
 
 val theMovieDbApiService: TheMovieDbApiService = retrofit.create()
 
+var imageBaseUrl: String = ""

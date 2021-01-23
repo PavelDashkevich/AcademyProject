@@ -1,42 +1,41 @@
 package com.example.academyproject.models
 
-import com.example.academyproject.network.BACKDROP_IMG_SIZE
-import com.example.academyproject.network.JsonMovie
-import com.example.academyproject.network.POSTER_IMG_SIZE
+import com.example.academyproject.network.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Movie(
+    @SerialName("id")
     val id: Int,
+    @SerialName("title")
     val title: String,
+    @SerialName("overview")
     var overview: String,
-    var poster: String,
-    var backdrop: String,
+    @SerialName("poster_path")
+    var posterImagePath: String,
+    @SerialName("backdrop_path")
+    var backdropImagePath: String,
+    @SerialName("vote_average")
     val ratings: Float,
+    @SerialName("vote_count")
     val numberOfRatings: Int,
-    val minimumAge: Int,
-    var runtime: Int?,
-    val genres: List<Genre>,
-    var actors: List<Actor>,
-    var runtimeLoaded: Boolean,
-    var actorsLoaded: Boolean
+    @SerialName("adult")
+    val adult: Boolean,
+    @SerialName("runtime")
+    var runtime: Int? = null,
+    @SerialName("genre_ids")
+    var genreIds: List<Int> = listOf(),
+    var genres: List<Genre> = listOf(),
+    var actors: List<Actor> = listOf(),
+    var runtimeLoaded: Boolean = false,
+    var actorsLoaded: Boolean = false
 ) {
-    constructor(jsonMovie: JsonMovie, genres: List<Genre>, actors: List<Actor>) : this(
-        id = jsonMovie.id,
-        title = jsonMovie.title,
-        overview = jsonMovie.overview,
-        poster = jsonMovie.posterPicture,
-        backdrop = jsonMovie.backdropPicture,
-        ratings = jsonMovie.ratings,
-        numberOfRatings = jsonMovie.votesCount,
-        minimumAge = if (jsonMovie.adult) 16 else 13,
-        runtime = jsonMovie.runtime,
-        genres = genres,
-        actors = actors,
-        runtimeLoaded = false,
-        actorsLoaded = false
-    )
+    val contentRating: String
+        get() = if (adult) "16+" else "PG"
 
-    fun applyBaseUrl(baseUrl: String) {
-        poster = "$baseUrl$POSTER_IMG_SIZE$poster"
-        backdrop = "$baseUrl$BACKDROP_IMG_SIZE$backdrop"
+    fun applyImageBaseUrl(imageBaseUrl: String) {
+        posterImagePath = "$imageBaseUrl$POSTER_IMG_SIZE/$posterImagePath"
+        backdropImagePath = "$imageBaseUrl$BACKDROP_IMG_SIZE/$backdropImagePath"
     }
 }

@@ -13,7 +13,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -22,12 +22,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.academyproject.R
 import com.example.academyproject.models.Movie
-import com.example.academyproject.viewmodels.MoviesViewModel
+import com.example.academyproject.viewmodels.MovieDetailsViewModel
+import com.example.academyproject.viewmodels.MoviesViewModelFactory
 
 class FragmentMovieDetails: Fragment() {
-    private val viewModel: MoviesViewModel by activityViewModels()
+    private val viewModel: MovieDetailsViewModel by viewModels {
+        MoviesViewModelFactory(requireContext().applicationContext)
+    }
     private var movie: Movie? = null
-    private var movieID: Int? = null
 
     private lateinit var name: TextView
     private lateinit var genre: TextView
@@ -49,28 +51,20 @@ class FragmentMovieDetails: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViewElements(view)
-
-        movieID?.let { selectMovie(it) }
-        viewModel.selectedMovie.observe(viewLifecycleOwner, this::updateMovieData)
-        updateMovieData(viewModel.selectedMovie.value)
-        viewModel.actorsUpdatedInMovieID.observe(viewLifecycleOwner, this::updateActors)
+        selectMovie()
+        viewModel.actorsUpdatedInMovie.observe(viewLifecycleOwner, this::updateActors)
+        setMovieData(view)
     }
 
-    private fun selectMovie(movieID: Int) {
-        viewModel.selectMovie(movieID)
+    private fun selectMovie() {
+        if (movie == null)
+            movie = viewModel.getSelectedMovie()
+        else
+            movie?.let { viewModel.selectMovie(it) }
     }
 
-    private fun updateMovieData(newMovie: Movie?) {
-        movie = newMovie
-        view?.let {
-            setMovieData(it)
-        }
-    }
-
-    private fun updateActors(movieID: Int?) {
-        movieID?.let {
-            if (it == this.movieID) updateRecyclerView()
-        }
+    private fun updateActors(actorsUpdated: Boolean) {
+        if (actorsUpdated) updateRecyclerView()
     }
 
     private fun setMovieData(view: View) {
@@ -78,7 +72,7 @@ class FragmentMovieDetails: Fragment() {
 
         name.text = movie?.title ?: ""
         genre.text = movie?.let { movie -> movie.genres.joinToString { it.name } }
-        contentRating.text = getString(R.string.content_rating, movie?.minimumAge ?: 13)
+        contentRating.text = movie?.contentRating ?: "PG"
         storyline.text = movie?.overview ?: ""
         reviewsNumber.text = view.context.resources.getQuantityString(R.plurals.reviews_num, numOfRatings, numOfRatings)
         rating.rating = (movie?.ratings ?: 0F) / 2F
@@ -119,7 +113,7 @@ class FragmentMovieDetails: Fragment() {
 
             Glide
                 .with(it)
-                .load(movie.backdrop)
+                .load(movie.backdropImagePath)
                 .apply(requestOptions)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(image)
@@ -161,9 +155,9 @@ class FragmentMovieDetails: Fragment() {
     }
 
     companion object {
-        fun newInstance(idOfSelectedMovie: Int): FragmentMovieDetails {
+        fun newInstance(movie: Movie): FragmentMovieDetails {
             val fragment = FragmentMovieDetails()
-            fragment.movieID = idOfSelectedMovie
+            fragment.movie = movie
 
             return fragment
         }

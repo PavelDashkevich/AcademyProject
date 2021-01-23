@@ -2,20 +2,19 @@ package com.example.academyproject.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.academyproject.models.Actor
+import com.example.academyproject.models.Movie
 import com.example.academyproject.models.MoviesLoader
 import com.example.academyproject.models.MoviesLoaderSubscriber
-import com.example.academyproject.models.Movie
+import com.example.academyproject.persistence.MoviesRepository
 
-class MoviesViewModel: ViewModel(), MoviesLoaderSubscriber {
-    private var model = MoviesLoader(this)
+class MoviesViewModel(
+    repository: MoviesRepository
+) : ViewModel(), MoviesLoaderSubscriber {
+    private var model = MoviesLoader(this, repository)
 
     var isMoviesLoading = MutableLiveData(false)
     var moviesList = MutableLiveData<List<Movie>>(mutableListOf())
-    var selectedMovie = MutableLiveData<Movie?>(null)
     var latestUpdatedItemIndex = MutableLiveData<Int?>(null)
-    private var imagesBaseUrl = MutableLiveData("")
-    var actorsUpdatedInMovieID = MutableLiveData<Int?>(null)
     var errorOnMoviesLoading = MutableLiveData("")
 
     fun loadMovies() {
@@ -23,24 +22,11 @@ class MoviesViewModel: ViewModel(), MoviesLoaderSubscriber {
         model.requestMoviesList()
     }
 
-    fun selectMovie(movieID: Int) {
-        try {
-            selectedMovie.value = moviesList.value?.first { it.id == movieID }
-        } catch (e: NoSuchElementException) {
-            selectedMovie.value = null
-        }
-
-        selectedMovie.value?.let {
-            if (!it.actorsLoaded) model.requestMovieCredits(it.id)
-        }
-    }
-
     fun loadMovieDetails(movieID: Int) {
         model.requestMovieDetails(movieID)
     }
 
-    override fun onMoviesLoaded(movies: List<Movie>, imagesBaseUrl: String, errorMsg: String) {
-        this.imagesBaseUrl.value = imagesBaseUrl
+    override fun onMoviesLoaded(movies: List<Movie>, errorMsg: String) {
         isMoviesLoading.value = false
         moviesList.value = movies
         errorOnMoviesLoading.value = errorMsg
@@ -67,23 +53,5 @@ class MoviesViewModel: ViewModel(), MoviesLoaderSubscriber {
         } catch (e: NoSuchElementException) { }
 
         return existingMovie
-    }
-
-    override fun onMovieCreditsLoaded(movieID: Int, actors: List<Actor>) {
-        val existingMovie: Movie? = getExistingMovieById(movieID)
-        var idOfUpdatedItem: Int? = null
-
-        existingMovie?.let {
-            it.actors = actors
-            it.actors.forEach { actor ->
-                imagesBaseUrl.value?.let { baseUrl ->
-                    actor.applyBaseUrl(baseUrl)
-                }
-            }
-            it.actorsLoaded = true
-            idOfUpdatedItem = movieID
-        }
-
-        actorsUpdatedInMovieID.value = idOfUpdatedItem
     }
 }
