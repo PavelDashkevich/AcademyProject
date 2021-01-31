@@ -16,6 +16,8 @@ import com.example.academyproject.R
 import com.example.academyproject.viewmodels.MoviesViewModel
 import com.example.academyproject.models.Movie
 import com.example.academyproject.viewmodels.MoviesViewModelFactory
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class FragmentMoviesList: Fragment() {
     private val viewModel: MoviesViewModel by viewModels {
@@ -56,6 +58,7 @@ class FragmentMoviesList: Fragment() {
         viewModel.errorOnMoviesLoading.observe(viewLifecycleOwner, this::showError)
 
         viewModel.loadMovies()
+        viewModel.loadMoviesFromFlow()
     }
 
     private fun setupViewElements(view: View) {

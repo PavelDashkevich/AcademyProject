@@ -1,10 +1,13 @@
 package com.example.academyproject.models
 
-import com.example.academyproject.network.imageBaseUrl
+import android.util.Log
+import com.example.academyproject.caching.Cacher
 import com.example.academyproject.network.theMovieDbApiService
 import com.example.academyproject.persistence.MoviesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -12,6 +15,8 @@ class MoviesLoader(
     private var handler: MoviesLoaderSubscriber? = null,
     private val repository: MoviesRepository
 ) {
+    private val cacher = Cacher(theMovieDbApiService, repository)
+
     fun requestMoviesList() {
         CoroutineScope(Dispatchers.Main).launch {
             var errorMsg = ""
@@ -21,20 +26,7 @@ class MoviesLoader(
                 handler?.onMoviesLoaded(movies, errorMsg)
 
             try {
-                val genres = theMovieDbApiService.getGenres().genres
-                repository.replaceAllGenres(genres)
-
-                val genresMap = genres.associateBy { it.id }
-                imageBaseUrl = theMovieDbApiService.getConfiguration().images.baseUrl
-                movies = theMovieDbApiService.getTopRatedMovies().results
-                movies.forEach { movie ->
-                    movie.applyImageBaseUrl(imageBaseUrl)
-                    movie.genres = movie.genreIds.map {
-                        genresMap[it] ?: Genre(it, "Unknown")
-                    }
-                }
-                repository.insertMovies(movies)
-
+                movies = cacher.loadMoviesList()
             } catch (e: Exception) {
                 errorMsg = if (e is HttpException) {
                     "Error occurred: code ${e.code()}: ${e.message()}"
@@ -50,11 +42,18 @@ class MoviesLoader(
     fun requestMovieDetails(movieID: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val movie = theMovieDbApiService.getMovieDetails(movieID)
-                repository.updateRuntimeById(movie.runtime ?: 0, movie.id)
+                val movie = cacher.loadMovieDetails(movieID)
                 handler?.onMovieDetailsLoaded(movie)
             } catch (e: Exception) {
 
+            }
+        }
+    }
+
+    fun requestMoviesFromFlow() {
+        CoroutineScope(Dispatchers.Main).launch {
+            repository.getAllMoviesAsFlow().collect {
+                handler?.onMoviesLoaded(it, "")
             }
         }
     }

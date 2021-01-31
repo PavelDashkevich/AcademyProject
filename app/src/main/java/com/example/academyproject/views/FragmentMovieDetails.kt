@@ -25,7 +25,7 @@ import com.example.academyproject.models.Movie
 import com.example.academyproject.viewmodels.MovieDetailsViewModel
 import com.example.academyproject.viewmodels.MoviesViewModelFactory
 
-class FragmentMovieDetails: Fragment() {
+class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
     private val viewModel: MovieDetailsViewModel by viewModels {
         MoviesViewModelFactory(requireContext().applicationContext)
     }
@@ -42,12 +42,6 @@ class FragmentMovieDetails: Fragment() {
     private lateinit var castHeader: TextView
     private lateinit var recycler: RecyclerView
     private lateinit var progressBar: ProgressBar
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_movies_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViewElements(view)

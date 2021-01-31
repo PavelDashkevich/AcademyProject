@@ -26,6 +26,10 @@ class MoviesViewModel(
         model.requestMovieDetails(movieID)
     }
 
+    fun loadMoviesFromFlow() {
+        model.requestMoviesFromFlow()
+    }
+
     override fun onMoviesLoaded(movies: List<Movie>, errorMsg: String) {
         isMoviesLoading.value = false
         moviesList.value = movies
