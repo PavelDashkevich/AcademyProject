@@ -2,8 +2,11 @@ package com.example.academyproject.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.*
 import com.example.academyproject.R
 import com.example.academyproject.models.Movie
+import com.example.academyproject.services.MoviesLoaderWorker
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), MovieClickListener {
 
@@ -17,6 +20,8 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
                 commit()
             }
         }
+
+        startWorker()
     }
 
     override fun onMovieClick(movie: Movie) {
@@ -25,6 +30,24 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
             add(R.id.fl_main, FragmentMovieDetails.newInstance(movie))
             commit()
         }
+    }
+    
+    private fun startWorker() {
+        val workManager = WorkManager.getInstance(applicationContext)
+        val workRequest = PeriodicWorkRequestBuilder<MoviesLoaderWorker>(90, TimeUnit.SECONDS)
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.METERED)
+                    .setRequiresCharging(true)
+                    .build()
+            )
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            "MovieLoader",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 }
 

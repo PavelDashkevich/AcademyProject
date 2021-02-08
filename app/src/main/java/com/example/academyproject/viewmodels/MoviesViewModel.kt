@@ -1,7 +1,9 @@
 package com.example.academyproject.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.academyproject.models.Movie
 import com.example.academyproject.models.MoviesLoader
 import com.example.academyproject.models.MoviesLoaderSubscriber
@@ -19,6 +21,7 @@ class MoviesViewModel(
 
     fun loadMovies() {
         isMoviesLoading.value = true
+        Log.d("MovieApp", "MoviesViewModel: loadMovies()")
         model.requestMoviesList()
     }
 
@@ -26,10 +29,20 @@ class MoviesViewModel(
         model.requestMovieDetails(movieID)
     }
 
+    fun loadMoviesFromFlow() {
+        model.requestMoviesFromFlow(viewModelScope)
+    }
+
     override fun onMoviesLoaded(movies: List<Movie>, errorMsg: String) {
         isMoviesLoading.value = false
         moviesList.value = movies
         errorOnMoviesLoading.value = errorMsg
+        Log.d("MovieApp", "MoviesViewModel: onMoviesLoaded()")
+    }
+
+    override fun onMoviesFromFlowLoaded(movies: List<Movie>) {
+        moviesList.value = movies
+        Log.d("MovieApp", "MoviesViewModel: onMoviesFromFlowLoaded()")
     }
 
     override fun onMovieDetailsLoaded(movie: Movie) {
@@ -53,5 +66,11 @@ class MoviesViewModel(
         } catch (e: NoSuchElementException) { }
 
         return existingMovie
+    }
+
+    // debug
+    fun loadMoviesAndDetails() {
+        Log.d("MovieApp", "FragmentMoviesList: topHeader.onClickListener()")
+        model.requestMoviesAndDetails()
     }
 }

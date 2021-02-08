@@ -1,25 +1,39 @@
 package com.example.academyproject.persistence
 
 import android.content.Context
+import android.util.Log
 import com.example.academyproject.models.Actor
 import com.example.academyproject.models.Genre
 import com.example.academyproject.models.Movie
 import com.example.academyproject.persistence.entities.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class MoviesRepository(applicationContext: Context) {
-    private val moviesDb = MoviesDatabase.create(applicationContext)
+    private val moviesDb = MoviesDatabase.getInstance(applicationContext)
 
     suspend fun getAllMovies(): List<Movie> = withContext(Dispatchers.IO) {
-        val movies: List<Movie> = moviesDb.moviesDao.getAll().map { toMovie(it) }
+        Log.d("MovieApp", "MoviesRepository: getAllMovies()")
+        return@withContext fillGenresActors(moviesDb.moviesDao.getAll())
+    }
+
+    suspend fun getAllMoviesAsFlow(): Flow<List<Movie>> = withContext(Dispatchers.IO) {
+        Log.d("MovieApp", "MoviesRepository: getAllMoviesAsFlow()")
+        return@withContext moviesDb.moviesDao.getAllAsFlow().map { fillGenresActors(it) }
+    }
+
+    private suspend fun fillGenresActors(moviesEntities: List<MoviesEntity>): List<Movie> {
+        Log.d("MovieApp", "MoviesRepository: fillGenresActors()")
+        val movies: List<Movie> = moviesEntities.map { toMovie(it) }
 
         movies.forEach { movie ->
             movie.actors = moviesDb.actorsDao.getByMovieId(movie.id).map { toActor(it) }
             movie.genres = moviesDb.genresDao.getByMovieId(movie.id).map { toGenre(it) }
         }
 
-        return@withContext movies
+        return movies
     }
 
     suspend fun replaceAllGenres(genres: List<Genre>) = withContext(Dispatchers.IO) {

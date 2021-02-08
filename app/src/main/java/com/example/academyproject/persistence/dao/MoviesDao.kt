@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.academyproject.persistence.entities.MoviesEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MoviesDao {
@@ -13,6 +14,9 @@ interface MoviesDao {
 
     @Query("SELECT * FROM movies")
     suspend fun getAll(): List<MoviesEntity>
+
+    @Query("SELECT * FROM movies")
+    fun getAllAsFlow(): Flow<List<MoviesEntity>>
 
     @Query("UPDATE movies SET runtime = :runtime WHERE _id == :movieId")
     suspend fun updateRuntimeById(runtime: Int, movieId: Int)

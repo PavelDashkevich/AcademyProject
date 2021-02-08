@@ -25,12 +25,20 @@ abstract class MoviesDatabase : RoomDatabase() {
     abstract val moviesGenresDao: MoviesGenresDao
 
     companion object {
-        fun create(applicationContext: Context): MoviesDatabase = Room.databaseBuilder(
-            applicationContext,
-            MoviesDatabase::class.java,
-            MoviesDbContract.DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration()
-            .build()
+        private var instance: MoviesDatabase? = null
+
+        fun getInstance(applicationContext: Context): MoviesDatabase {
+            if (instance == null) {
+                instance = Room.databaseBuilder(
+                        applicationContext,
+                        MoviesDatabase::class.java,
+                        MoviesDbContract.DATABASE_NAME
+                )
+                        .fallbackToDestructiveMigration()
+                        .build()
+            }
+
+            return instance as MoviesDatabase
+        }
     }
 }

@@ -22,7 +22,7 @@ class MoviesAdapter(
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        if (!movies[position].runtimeLoaded)
+        if (!movies[position].runtimeLoaded || movies[position].runtime ?: 0 == 0)
             viewModel.loadMovieDetails(movies[position].id)
 
         holder.bind(movies[position], itemClickListener)
