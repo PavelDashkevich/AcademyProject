@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
     
     private fun startWorker() {
         val workManager = WorkManager.getInstance(applicationContext)
-        val workRequest = PeriodicWorkRequestBuilder<MoviesLoaderWorker>(90, TimeUnit.SECONDS)
+        val workRequest = PeriodicWorkRequestBuilder<MoviesLoaderWorker>(8, TimeUnit.HOURS)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.METERED)
