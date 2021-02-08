@@ -1,6 +1,7 @@
 package com.example.academyproject.persistence
 
 import android.content.Context
+import android.util.Log
 import com.example.academyproject.models.Actor
 import com.example.academyproject.models.Genre
 import com.example.academyproject.models.Movie
@@ -11,17 +12,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class MoviesRepository(applicationContext: Context) {
-    private val moviesDb = MoviesDatabase.create(applicationContext)
+    private val moviesDb = MoviesDatabase.getInstance(applicationContext)
 
     suspend fun getAllMovies(): List<Movie> = withContext(Dispatchers.IO) {
+        Log.d("MovieApp", "MoviesRepository: getAllMovies()")
         return@withContext fillGenresActors(moviesDb.moviesDao.getAll())
     }
 
     suspend fun getAllMoviesAsFlow(): Flow<List<Movie>> = withContext(Dispatchers.IO) {
+        Log.d("MovieApp", "MoviesRepository: getAllMoviesAsFlow()")
         return@withContext moviesDb.moviesDao.getAllAsFlow().map { fillGenresActors(it) }
     }
 
     private suspend fun fillGenresActors(moviesEntities: List<MoviesEntity>): List<Movie> {
+        Log.d("MovieApp", "MoviesRepository: fillGenresActors()")
         val movies: List<Movie> = moviesEntities.map { toMovie(it) }
 
         movies.forEach { movie ->

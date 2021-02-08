@@ -1,7 +1,6 @@
 package com.example.academyproject.models
 
 import com.example.academyproject.caching.Cacher
-import com.example.academyproject.network.imageBaseUrl
 import com.example.academyproject.network.theMovieDbApiService
 import com.example.academyproject.persistence.MoviesRepository
 import kotlinx.coroutines.CoroutineScope

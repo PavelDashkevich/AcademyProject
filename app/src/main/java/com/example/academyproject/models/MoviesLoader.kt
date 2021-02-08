@@ -6,7 +6,6 @@ import com.example.academyproject.network.theMovieDbApiService
 import com.example.academyproject.persistence.MoviesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -21,9 +20,15 @@ class MoviesLoader(
         CoroutineScope(Dispatchers.Main).launch {
             var errorMsg = ""
             var movies: List<Movie> = repository.getAllMovies()
+            Log.d("MovieApp", "MoviesLoader: requestMoviesList(): repository.getAllMovies() called")
 
-            if (movies.isNotEmpty())
+            if (movies.isNotEmpty()) {
+                Log.d("MovieApp", "MoviesLoader: requestMoviesList(): movies list is not empty")
                 handler?.onMoviesLoaded(movies, errorMsg)
+                return@launch
+            }
+
+            Log.d("MovieApp", "MoviesLoader: requestMoviesList(): movies list is empty, trying to load from network to cache")
 
             try {
                 movies = cacher.loadMoviesList()
@@ -33,7 +38,10 @@ class MoviesLoader(
                 } else {
                     "Error occurred: ${e.message ?: ""}"
                 }
+
+                Log.d("MovieApp", "MoviesLoader: requestMoviesList(): exception: $errorMsg")
             } finally {
+                Log.d("MovieApp", "MoviesLoader: requestMoviesList(): end of call")
                 handler?.onMoviesLoaded(movies, errorMsg)
             }
         }
@@ -45,16 +53,33 @@ class MoviesLoader(
                 val movie = cacher.loadMovieDetails(movieID)
                 handler?.onMovieDetailsLoaded(movie)
             } catch (e: Exception) {
+                val errorMsg = if (e is HttpException) {
+                    "Error occurred: code ${e.code()}: ${e.message()}"
+                } else {
+                    "Error occurred: ${e.message ?: ""}"
+                }
 
+                Log.d("MovieApp", "MoviesLoader: requestMovieDetails(): exception: $errorMsg")
             }
         }
     }
 
-    fun requestMoviesFromFlow() {
-        CoroutineScope(Dispatchers.Main).launch {
+    fun requestMoviesFromFlow(viewModelScope: CoroutineScope) {
+        Log.d("MovieApp", "MoviesLoader: requestMoviesFromFlow()")
+        viewModelScope.launch {
             repository.getAllMoviesAsFlow().collect {
-                handler?.onMoviesLoaded(it, "")
+                Log.d("MovieApp", "MoviesLoader: requestMoviesFromFlow(): collect")
+                handler?.onMoviesFromFlowLoaded(it)
+                Log.d("MovieApp", "MoviesLoader: requestMoviesFromFlow(): collect (after sending to handle)")
             }
+            Log.d("MovieApp", "MoviesLoader: requestMoviesFromFlow(): after collect")
+        }
+    }
+
+    // debug
+    fun requestMoviesAndDetails() {
+        CoroutineScope(Dispatchers.Main).launch {
+            cacher.loadMoviesListAndDetails()
         }
     }
 }
