@@ -24,6 +24,15 @@ class MoviesRepository(applicationContext: Context) {
         return@withContext moviesDb.moviesDao.getAllAsFlow().map { fillGenresActors(it) }
     }
 
+    suspend fun getMovieById(movieId: Int): Movie? = withContext(Dispatchers.IO) {
+        Log.d("MovieApp", "MoviesRepository: getMovieById($movieId)")
+        return@withContext fillGenresActors(moviesDb.moviesDao.getById(movieId)).firstOrNull()
+    }
+
+    suspend fun getTopRatedMovie(): Movie? = withContext(Dispatchers.IO) {
+        return@withContext fillGenresActors(moviesDb.moviesDao.getTopRated()).firstOrNull()
+    }
+
     private suspend fun fillGenresActors(moviesEntities: List<MoviesEntity>): List<Movie> {
         Log.d("MovieApp", "MoviesRepository: fillGenresActors()")
         val movies: List<Movie> = moviesEntities.map { toMovie(it) }

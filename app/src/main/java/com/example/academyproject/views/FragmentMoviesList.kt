@@ -73,7 +73,7 @@ class FragmentMoviesList: Fragment() {
     }
 
     private fun setupViewElements(view: View) {
-        progressBar = view.findViewById(R.id.pb_content_loading)
+        progressBar = view.findViewById(R.id.pb_loading_actors)
         recycler = view.findViewById(R.id.rv_movies_list)
     }
 

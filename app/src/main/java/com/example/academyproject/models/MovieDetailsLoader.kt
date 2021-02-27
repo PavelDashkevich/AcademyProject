@@ -1,5 +1,6 @@
 package com.example.academyproject.models
 
+import android.util.Log
 import com.example.academyproject.caching.Cacher
 import com.example.academyproject.network.theMovieDbApiService
 import com.example.academyproject.persistence.MoviesRepository
@@ -26,6 +27,14 @@ class MovieDetailsLoader(
             } catch (e: Exception) {
 
             }
+        }
+    }
+
+    fun requestMovieById(movieId: Int) {
+        Log.d("MovieApp", "MovieDetailsLoader: requestMovieById($movieId)")
+        CoroutineScope(Dispatchers.Main).launch {
+            val movie = repository.getMovieById(movieId)
+            handler?.onMovieLoaded(movie)
         }
     }
 }

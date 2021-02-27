@@ -18,6 +18,12 @@ interface MoviesDao {
     @Query("SELECT * FROM movies")
     fun getAllAsFlow(): Flow<List<MoviesEntity>>
 
+    @Query("SELECT * FROM movies WHERE _id == :movieId")
+    suspend fun getById(movieId: Int): List<MoviesEntity>
+
+    @Query("SELECT * FROM movies WHERE vote_average = (SELECT MAX(vote_average) FROM movies)")
+    suspend fun getTopRated(): List<MoviesEntity>
+
     @Query("UPDATE movies SET runtime = :runtime WHERE _id == :movieId")
     suspend fun updateRuntimeById(runtime: Int, movieId: Int)
 }

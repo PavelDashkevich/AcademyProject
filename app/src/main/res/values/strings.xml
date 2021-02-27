@@ -18,4 +18,9 @@
         <item quantity="other">%d reviews</item>
     </plurals>
     <string name="movie_duration">%1$d min</string>
+
+    <!--    Notification strings   -->
+    <string name="channel_new_movie">New movies</string>
+    <string name="channel_new_movie_description">All new movies.</string>
+    <string name="notification_top_rated_new_movie">New top rated movie</string>
 </resources>

@@ -50,6 +50,7 @@ class Cacher(
 
     suspend fun loadMovieCredits(movieID: Int): List<Actor> = withContext(Dispatchers.IO) {
         val actors = theMovieDbApiService.getMovieCredits(movieID).cast
+        imageBaseUrl = movieDbApiService.getConfiguration().images.baseUrl
         Log.d("MovieApp", "Cacher: loadMovieCredits(${movieID}): theMovieDbApiService.getMovieCredits() called")
         actors.forEach { it.applyImageBaseUrl(imageBaseUrl) }
         repository.insertOrReplaceActorsByMovieId(actors, movieID)
