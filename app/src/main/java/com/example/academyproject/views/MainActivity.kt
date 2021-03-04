@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.academyproject.R
 import com.example.academyproject.models.Movie
-import com.example.academyproject.notifications.Notifications
 import com.example.academyproject.services.MoviesLoaderWorker
 import java.util.concurrent.TimeUnit
 

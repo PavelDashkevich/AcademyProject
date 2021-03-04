@@ -1,10 +1,8 @@
 package com.example.academyproject.services
 
-import android.app.Notification
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
-import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.example.academyproject.caching.Cacher
 import com.example.academyproject.models.Movie

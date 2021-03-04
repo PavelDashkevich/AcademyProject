@@ -23,4 +23,16 @@
     <string name="channel_new_movie">New movies</string>
     <string name="channel_new_movie_description">All new movies.</string>
     <string name="notification_top_rated_new_movie">New top rated movie</string>
+
+    <!--    Buttons    -->
+    <string name="schedule_viewing">Schedule viewing</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!--    Dialogs   -->
+    <string name="calendar_permission_dialog_description">To continue please grant access to calendar reading and writing.</string>
+    <string name="calendar_permission_dialog_denied_text">This feature is not available without calendar permissions. Open app settings?</string>
+
+    <string name="calendar_permissions_granted">Calendar permissions granted</string>
+    <string name="calendar_permissions_not_granted">Calendar permissions are not granted</string>
 </resources>

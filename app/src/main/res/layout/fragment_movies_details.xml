@@ -99,7 +99,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
             android:fontFamily="@font/roboto_black"
-            android:paddingVertical="2dp"
+            android:padding="2dp"
             app:layout_constraintBottom_toTopOf="@id/tv_movie_name"
             app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left" />
 
@@ -130,13 +130,28 @@
             app:layout_constraintTop_toBottomOf="@id/tv_movie_genre"
             android:textAllCaps="true"/>
 
+        <Button
+            android:id="@+id/btn_schedule_viewing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@id/gl_vertical_left"
+            app:layout_constraintTop_toBottomOf="@id/tv_reviews_number"
+            android:backgroundTint="@color/maroon"
+            android:drawableStart="@drawable/ic_calendar"
+            android:drawableTint="@color/text_general"
+            android:text="@string/schedule_viewing"
+            android:textAllCaps="false"
+            android:fontFamily="@font/roboto_light"
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_storyline_header"
             android:layout_marginTop="24dp"
             android:text="@string/storyline_header"
             app:layout_constraintLeft_toLeftOf="@id/gl_vertical_left"
             app:layout_constraintRight_toRightOf="@id/gl_vertical_right"
-            app:layout_constraintTop_toBottomOf="@id/tv_reviews_number"
+            app:layout_constraintTop_toBottomOf="@id/btn_schedule_viewing"
             style="@style/TextViewGeneralHeader"/>
 
         <TextView

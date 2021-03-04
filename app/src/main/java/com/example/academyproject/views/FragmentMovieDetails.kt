@@ -1,17 +1,22 @@
 package com.example.academyproject.views
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.icu.util.Calendar
+import android.net.Uri
+import android.os.BaseBundle
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +28,11 @@ import com.example.academyproject.R
 import com.example.academyproject.models.Movie
 import com.example.academyproject.viewmodels.MovieDetailsViewModel
 import com.example.academyproject.viewmodels.MoviesViewModelFactory
+import java.time.LocalDate
 
-class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
+class FragmentMovieDetails:
+    Fragment(R.layout.fragment_movies_details),
+    CalendarPermissionHelper.PermissionGrantedListener {
     private val viewModel: MovieDetailsViewModel by viewModels {
         MoviesViewModelFactory(requireContext().applicationContext)
     }
@@ -43,6 +51,23 @@ class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
     private lateinit var recycler: RecyclerView
     private lateinit var progressBarActors: ProgressBar
     private lateinit var progressBarMovie: ProgressBar
+    private lateinit var scheduleViewing: Button
+
+    private val calendarPermissionHelper = CalendarPermissionHelper(this, this)
+
+    // region implements Fragment lifecycle events
+    @SuppressLint("MissingPermission")
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        calendarPermissionHelper.init()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(FragmentDatePicker.KEY_RESULT, ::onDateSet)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViewElements(view)
@@ -50,8 +75,18 @@ class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
         viewModel.movieGotById.observe(viewLifecycleOwner, this::refreshContent)
         selectMovie()
         setMovieData(view, viewModel.movieGotById.value ?: false)
+
+        scheduleViewing.setOnClickListener { calendarPermissionHelper.requestPermission() }
     }
 
+    override fun onDetach() {
+        calendarPermissionHelper.terminate()
+
+        super.onDetach()
+    }
+    // endregion implements Fragment lifecycle events
+
+    // region setup views from movie
     private fun selectMovie() {
         if (movie == null && movieId == null) { // configuration change
             movie = viewModel.getSelectedMovie()
@@ -77,7 +112,7 @@ class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
     private fun setMovieData(view: View, contentLoaded: Boolean) {
         val views = listOf(
             name, genre, contentRating, storyline, reviewsNumber, rating, image, castHeader,
-            recycler
+            recycler, scheduleViewing
         )
 
         if (!contentLoaded) {
@@ -124,6 +159,7 @@ class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
         recycler = view.findViewById(R.id.rv_actors_list)
         progressBarActors = view.findViewById(R.id.pb_loading_actors)
         progressBarMovie = view.findViewById(R.id.pb_loading_movie)
+        scheduleViewing = view.findViewById(R.id.btn_schedule_viewing)
     }
 
     private fun loadBackdropImage(movie: Movie) {
@@ -182,6 +218,87 @@ class FragmentMovieDetails: Fragment(R.layout.fragment_movies_details) {
         recycler.addItemDecoration(ActorItemDecoration(resources.getDimension(R.dimen.actor_photo_margin_side).toInt()))
         recycler.adapter = adapter
     }
+    // endregion setup views from movie
+
+    // region schedule movie viewing to calendar (with permissions request)
+    override fun onCalendarPermissionGranted() {
+        val dialog = FragmentDatePicker()
+        dialog.show(requireActivity().supportFragmentManager, "schedule")
+    }
+
+    private fun getCalendarId(): Long? {
+        var result: Long? = null
+
+        val projection = arrayOf(
+            CalendarContract.Calendars._ID,
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
+        )
+
+        var cursor = requireContext().contentResolver.query(
+            CalendarContract.Calendars.CONTENT_URI,
+            projection,
+            "${CalendarContract.Calendars.IS_PRIMARY} = 1",
+            null,
+            "${CalendarContract.Calendars._ID} ASC"
+        )
+
+        if (cursor != null && cursor.count <= 0) {
+            cursor = requireContext().contentResolver.query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                "${CalendarContract.Calendars.VISIBLE} = 1",
+                null,
+                "${CalendarContract.Calendars._ID} ASC"
+            )
+        }
+
+        cursor?.let {
+            if (it.moveToFirst()) {
+                result = it.getString(it.getColumnIndex(projection[0])).toLong()
+            }
+
+            it.close()
+        }
+
+        return result
+    }
+
+    @SuppressLint("NewApi")
+    fun onDateSet(key: String, bundle: BaseBundle) {
+        val now = LocalDate.now()
+        val year = bundle.getInt(FragmentDatePicker.BUNDLE_KEY_YEAR, now.year)
+        val month = bundle.getInt(FragmentDatePicker.BUNDLE_KEY_MONTH, now.monthValue)
+        val dayOfMonth = bundle.getInt(FragmentDatePicker.BUNDLE_KEY_DAY_OF_MONTH, now.dayOfMonth)
+
+        movie?.let {
+            val calendarId = getCalendarId()
+
+            if (calendarId == null) {
+                Toast.makeText(context, "Calendar not found.", Toast.LENGTH_SHORT).show()
+            } else {
+                val dateStart: Long = Calendar.getInstance().run {
+                    set(year, month, dayOfMonth)
+                    timeInMillis
+                }
+
+                val values = ContentValues().apply {
+                    put(CalendarContract.Events.DTSTART, dateStart)
+                    put(CalendarContract.Events.DTEND, dateStart)
+                    put(CalendarContract.Events.TITLE, "Don't forget to see this movie")
+                    put(CalendarContract.Events.DESCRIPTION, it.title)
+                    put(CalendarContract.Events.CALENDAR_ID, calendarId)
+                    put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE)
+                }
+
+                val uri: Uri? = requireContext().contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+
+                uri?.let {
+                    Toast.makeText(context, "Movie was added to calendar.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    // endregion schedule movie viewing to calendar (with permissions request)
 
     companion object {
         fun newInstance(movie: Movie): FragmentMovieDetails {

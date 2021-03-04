@@ -67,10 +67,4 @@ class MoviesViewModel(
 
         return existingMovie
     }
-
-    // debug
-    fun loadMoviesAndDetails() {
-        Log.d("MovieApp", "FragmentMoviesList: topHeader.onClickListener()")
-        model.requestMoviesAndDetails()
-    }
 }

@@ -3,12 +3,10 @@ package com.example.academyproject.views
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -60,16 +58,6 @@ class FragmentMoviesList: Fragment() {
         viewModel.errorOnMoviesLoading.observe(viewLifecycleOwner, this::showError)
 
         viewModel.loadMovies()
-
-        // debug
-        val topHeader: TextView? = view.findViewById(R.id.tv_top_menu_header)
-
-        topHeader?.let {
-            it.setOnClickListener {
-                Log.d("MovieApp", "FragmentMoviesList: topHeader.onClickListener()")
-                viewModel.loadMoviesAndDetails()
-            }
-        }
     }
 
     private fun setupViewElements(view: View) {

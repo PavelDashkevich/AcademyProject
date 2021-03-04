@@ -75,11 +75,4 @@ class MoviesLoader(
             Log.d("MovieApp", "MoviesLoader: requestMoviesFromFlow(): after collect")
         }
     }
-
-    // debug
-    fun requestMoviesAndDetails() {
-        CoroutineScope(Dispatchers.Main).launch {
-            cacher.loadMoviesListAndDetails()
-        }
-    }
 }
